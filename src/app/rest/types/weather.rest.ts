@@ -91,13 +91,12 @@ export namespace weather {
   }
 
   /* -------------------------------------------------------------------------- */
-  export namespace daily {
+  export namespace getDaily {
     export interface P {}
 
     export interface Q {
       readonly lat: number;
       readonly lon: number;
-      readonly exclude?: string;
       readonly units?: string;
       readonly lang?: string;
     }
@@ -155,7 +154,70 @@ export namespace weather {
   }
 
   /* -------------------------------------------------------------------------- */
-  export namespace hourly {
+  export namespace getHourly {
+    export interface P {}
+
+    export interface Q {
+      readonly lat: number;
+      readonly lon: number;
+      readonly units?: string;
+      readonly lang?: string;
+    }
+
+    export interface B {}
+
+    export interface R {
+      lat: number;
+      lon: number;
+      timezone: string;
+      timezone_offset: number;
+      current: {
+        dt: number;
+        sunrise: number;
+        sunset: number;
+        temp: number;
+        feels_like: number;
+        pressure: number;
+        humidity: number;
+        dew_point: number;
+        uvi: number;
+        clouds: number;
+        visibility: number;
+        wind_speed: number;
+        wind_deg: number;
+        weather: [
+          {
+            id: number;
+            main: string;
+            description: string;
+            icon: string;
+          }
+        ];
+      };
+      minutely: [
+        {
+          dt: number;
+          precipitation: number;
+        }
+      ];
+
+      hourly: ReadonlyArray<hourly>;
+
+      alerts: [
+        {
+          sender_name: string;
+          event: string;
+          start: number;
+          end: number;
+          description: string;
+          tags: Array<string>;
+        }
+      ];
+    }
+  }
+
+  /* -------------------------------------------------------------------------- */
+  export namespace getWeather {
     export interface P {}
 
     export interface Q {
@@ -204,6 +266,7 @@ export namespace weather {
       ];
 
       hourly: ReadonlyArray<hourly>;
+      daily: ReadonlyArray<daily>;
 
       alerts: [
         {
