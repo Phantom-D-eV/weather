@@ -26,6 +26,36 @@ export class WeatherDalService {
     );
   }
 
-  getHourly() {}
-  getDaily() {}
+  getWeather(
+    query: REST.weather.getWeather.Q
+  ): Observable<REST.weather.getWeather.R> {
+    let params = new HttpParams();
+    for (const [k, v] of Object.entries(query)) {
+      if (v !== '' && v !== undefined && v !== null) {
+        params = params.append(k, v);
+      }
+    }
+
+    return this.http.get<REST.weather.getWeather.R>(
+      'https://api.openweathermap.org/data/2.5/onecall',
+      {
+        params: new HttpParams().appendAll({
+          ...params,
+          appid: this.appid,
+        }),
+      }
+    );
+  }
+
+  getHourly(
+    query: REST.weather.getHourly.Q
+  ): Observable<REST.weather.getHourly.R> {
+    return this.getWeather({ ...query, exclude: 'hourly' });
+  }
+
+  getDaily(
+    query: REST.weather.getDaily.Q
+  ): Observable<REST.weather.getDaily.R> {
+    return this.getWeather({ ...query, exclude: 'daily' });
+  }
 }
