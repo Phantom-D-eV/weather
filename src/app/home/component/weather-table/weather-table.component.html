@@ -1,1 +1,55 @@
-<p>weather-table works!</p>
+<div *ngIf="route.queryParams | async as param">
+  <div
+    *ngIf="getDaily$ | async"
+    [style]="
+      param['exclude'] === 'daily'
+        ? 'visibility: visible;'
+        : 'visibility: hidden;'
+    "
+  >
+    <table *ngIf="homeService.daily$ | async as daily">
+      <tr>
+        <th>City</th>
+        <th *ngFor="let item of daily[0].daily.daily; let i = index">
+          @if(i<7){ {{ item.dt * 1000 | date : "EE" }}}
+        </th>
+      </tr>
+      <tr *ngFor="let item of daily">
+        <th>{{ item.name }}</th>
+
+        <th *ngFor="let day of item.daily.daily; let i = index">
+          @if(i<7){ {{ day.temp.day - 273.15 | number : "1.0" }}}
+        </th>
+      </tr>
+    </table>
+  </div>
+
+  <div
+    *ngIf="getHourly$ | async"
+    [style]="
+      param['exclude'] === 'hourly'
+        ? 'visibility: visible;'
+        : 'visibility: hidden;'
+    "
+  >
+    <table *ngIf="homeService.hourly$ | async as hourly">
+      <tr>
+        <th>City</th>
+        <th>03:00</th>
+        <th>06:00</th>
+        <th>09:00</th>
+        <th>12:00</th>
+        <th>15:00</th>
+        <th>18:00</th>
+        <th>21:00</th>
+        <th>24:00</th>
+      </tr>
+      <tr *ngFor="let item of hourly">
+        <th>{{ item.name }}</th>
+        @for (day of item.hourly.hourly; track day) { @if($index%6===0){
+        <th>{{ day.temp - 273.15 | number : "1.0" }}°</th>
+        } }
+      </tr>
+    </table>
+  </div>
+</div>
