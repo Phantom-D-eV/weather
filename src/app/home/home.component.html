@@ -1,1 +1,35 @@
-<p>home works!</p>
+<div class="container">
+  <h1>Weather</h1>
+  <div class="search">
+    <input class="search-input" #searchInput [(ngModel)]="search" type="text" />
+    <div class="radio">
+      <input
+        class="radio-input"
+        type="radio"
+        id="Daily"
+        value="daily"
+        name="exclude"
+        checked
+        (change)="changExclude('daily')"
+      />
+      <label class="radio-label" for="daily">Daily</label>
+      <input
+        class="radio-input"
+        type="radio"
+        id="Hourly"
+        value="hourly"
+        name="exclude"
+        (change)="changExclude('hourly')"
+      />
+      <label class="radio-label" for="hourly">Hourly</label>
+    </div>
+  </div>
+  @if(empty){
+  <div class="empty">Город не найден</div>
+  }
+  <div class="err">{{ error }}</div>
+
+  <div class="weather-table">
+    <app-weather-table></app-weather-table>
+  </div>
+</div>

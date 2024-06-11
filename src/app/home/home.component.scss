@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  margin: 40px 10%;
+}
+
+h1 {
+  text-align: center;
+  font-size: 55px;
+}
+
+.search {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 100px;
+
+  .search-input {
+    width: 60%;
+    outline: none;
+    border: 1px solid grey;
+    height: 35px;
+    border-radius: 25px;
+    padding: 5px 15px;
+    font-size: 1.6rem;
+  }
+}
+
+.radio {
+  display: flex;
+
+  .radio-label {
+    font-size: 1.2rem;
+  }
+}
+
+.empty {
+  color: rgb(33, 31, 182);
+}
+
+.err {
+  color: red;
+}
