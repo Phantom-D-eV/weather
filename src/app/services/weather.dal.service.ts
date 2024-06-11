@@ -2,24 +2,31 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { REST } from '../rest/rest';
 import { Observable } from 'rxjs';
+import { cachedRequest } from '../classes/cache/cache-decorator';
+import { CacheService } from '../classes/cache/cache.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WeatherDalService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly cache: CacheService
+  ) {}
 
   // строго говоря я бы получал ключ с сервера и хранил их env но у меня нет сервера :(
   appid = '010721642521f31b0fbc8c3831d45951';
+  apiLink = 'https://api.openweathermap.org/';
 
   searchCity(
     query: REST.weather.geocoding.Q
   ): Observable<REST.weather.geocoding.R> {
     return this.http.get<REST.weather.geocoding.R>(
-      'http://api.openweathermap.org/geo/1.0/direct',
+      this.apiLink + 'geo/1.0/direct',
       {
         params: new HttpParams().appendAll({
           q: query.city,
+          limit: 1,
           appid: this.appid,
         }),
       }
@@ -35,27 +42,30 @@ export class WeatherDalService {
         params = params.append(k, v);
       }
     }
-
+    params = params.append('appid', this.appid);
     return this.http.get<REST.weather.getWeather.R>(
-      'https://api.openweathermap.org/data/2.5/onecall',
+      this.apiLink + 'data/2.5/onecall',
       {
-        params: new HttpParams().appendAll({
-          ...params,
-          appid: this.appid,
-        }),
+        params,
       }
     );
   }
 
+  @cachedRequest(function () {
+    return this.cache;
+  })
   getHourly(
     query: REST.weather.getHourly.Q
   ): Observable<REST.weather.getHourly.R> {
-    return this.getWeather({ ...query, exclude: 'hourly' });
+    return this.getWeather({ ...query, exclude: 'daily' });
   }
 
+  @cachedRequest(function () {
+    return this.cache;
+  })
   getDaily(
     query: REST.weather.getDaily.Q
   ): Observable<REST.weather.getDaily.R> {
-    return this.getWeather({ ...query, exclude: 'daily' });
+    return this.getWeather({ ...query, exclude: 'hourly' });
   }
 }
